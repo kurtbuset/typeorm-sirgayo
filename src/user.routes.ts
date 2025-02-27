@@ -107,7 +107,7 @@ userRouter.put("/user/:id", async (req: Request, res: Response) => {
         .json({ error: error.details.map((x) => x.message) });
     }
 
-    const { name, email, password } = value;
+    const { firstName, lastName, title, email, role, password } = value;
     let hashedPassword;
 
     if (password) {
@@ -116,12 +116,15 @@ userRouter.put("/user/:id", async (req: Request, res: Response) => {
 
     // Update only the provided fields
     Object.assign(userToUpdate, {
-      name,
+      firstName,
+      lastName,
+      title,
+      role,
       email,
       ...(password ? { password: hashedPassword } : {}),
     });
 
-    const user = await userRepository.save(userToUpdate);
+    await userRepository.save(userToUpdate);
 
     return res
       .status(200)
